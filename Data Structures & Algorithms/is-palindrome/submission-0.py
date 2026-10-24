@@ -1,108 +1,125 @@
+""" Translation
+    We are given a string to prove whether or not it is a palindrome.
+"""
+
+""" Requirements
+    A palindrome is defined as a string that reads the same forward and backward. It also ignores
+    all non-alphanumeric characters and will remain case-insensitive.
+    The output of the function must return True or False.
+"""
+
+""" Approach
+    Create a function to check whether the character is part of the palindrome or not -> 
+    alphaNumericChar(str).
+    Use pointers left and right to check each character at both ends.
+    Since a palindrome is the same forwards and backwards; every valid pointer must match 
+    up until the left equals or crosses the right index.
+    i.e. the string "a" is a palindrome, because the left = 0 and right = 0.
+    i.e. the string "aa" is a palindrome, because the left = 0 and right = 0.
+"""
+
+""" Psuedocode
+    isAlphaNumericChar(str): # O(1)
+        str is in the set of alphanumeric characters
+        return true
+    
+    l = 0          # beginning index of string
+    r = len(s) - 1 # end index of string
+
+    # iterate the string
+    while l <= r:
+
+        # ignore all non-alphanumeric characters
+        if isAlphaNumericChar(s[l]) == False:
+           l += 1
+           continue
+        if isAlphaNumericChar(s[r]) == False:
+            r -= 1
+            continue
+         
+        if s[l] == s[r]:
+            l -= 1
+            r += 1
+        else:
+            return False # character mismatch
+    
+    return True # all characters were exhausted
+        
+"""
+
+""" Efficiency
+    The character validator uses a set so we remain at O(1).
+    The while loop must exhaust the entire length of the string so we have O(n).
+"""
+
 class Solution:
+    def isNumber(self, ch):
+        """ Checks if a character is part of the number 0-9 """
+        
+        ascii_ch = ord(ch)
+
+        return ascii_ch >= ord('0') and ascii_ch <= ord('9')
+
+    def isAlphabet(self, ch): # O(1)
+        """ Checks if a character is part of the alphabet """
+        ascii_ch = ord(ch)
+
+        # use ascii math to check for upper and lower-case letters
+        if ascii_ch >= ord('A') and ascii_ch <= ord('Z'):
+            return True
+        if ascii_ch >= ord('a') and ascii_ch <= ord('z'):
+            return True
+        
+        return False # not in the alphabet
+
     def isPalindrome(self, s: str) -> bool:
-        """ Translate
-        A palindrome is a string that reads the same forward and backward.
-        Ignores non-aplhanumeric characters and is case-insensitive.
-        """
-
-        """ Requirements / Output, Input, and Constraints
-        Output: True or False
-        Input: str
-        The given string is made up of all printable ASCII characters.
-        Its length is between 1 and 1000 (inclusive)
-        """
-
-        """ Approach / Methods and Observations
-        1st: 
-        Use two pointers that iterate the string, one that starts at the beginning and another at the end.
-        No need for extra space so no additional data structures are used
-
-        When do we know when the string is a Palindrome?
-            when the string is 1 character
-            when the left pointer crosses the right pointer, or viceversa
-        When do we know it's not a palindrome?
-            when the left pointer's character is valid but does not match the right pointer, or viceversa
-        """
-
-        """ Code / Pseudocode
-        1st Approach:
         
-        left = 0 
-        right = len(s)-1
+        l = 0          # beginning index of string
+        r = len(s) - 1 # end index of string
 
-        WHILE left_index <= right_index
+        # iterate the string
+        while l <= r:
+
+            # ignore all non-alphanumeric characters
+            if self.isAlphabet(s[l]) == False and self.isNumber(s[l]) == False:
+                l += 1
+                continue
+            if self.isAlphabet(s[r]) == False and self.isNumber(s[r]) == False:
+                r -= 1
+                continue
             
-            WHILE left_index < right_index AND left_char is invalid
-                left_index++
-            
-            WHILE right_index >= left_index AND right_char is invalid 
-                right_index--
-
-            IF left_index > right_index
-                return True
-
-            IF left_char == right_char
-                right_index--
-                left_index++
-            ELSE
+            # check alphabetical letters
+            if self.isAlphabet(s[l]) == True and self.isAlphabet(s[r]) == True:
+                
+                if s[l].lower() != s[r].lower():
+                    return False    # character mismatch
+                else:
+                    l += 1
+                    r -= 1
+                    continue        # continue remaining string
+            # check numbers 
+            # (only option left since non-alphanumeric characters are gone and we checked alpahbet)
+            if s[l] == s[r]:
+                l += 1
+                r -= 1
+                continue
+            else: 
                 return False
-        """
-        s= s.lower()
-
-        if len(s) == 1:
-            return True
-
-        left_index = 0
-        right_index = len(s)-1
-
-        while left_index <= right_index:
-
-            while left_index < right_index and not self.isAlphaNum(s[left_index]):
-                left_index += 1
-            
-            while right_index >= left_index and not self.isAlphaNum(s[right_index]):
-                right_index -= 1
-            
-            if left_index > right_index:
-                break
-            
-            elif s[left_index] == s[right_index]:
-                right_index -= 1
-                left_index += 1
-            else:
-                return False
-
-        return True
-
-    def isAlphaNum(self, s: str) -> bool:
-
-        # ascii code range for numbers: 48 - 57 inclusive (0-9)
-        # ascii code range for letters: 
-            # 65 - 90 inclusive (A-Z)
-            # 97 - 122 inclsuive (a-z)
         
-        num_min = ord('0')
-        num_max = ord('9')
-        upper_letter_min = ord('A')
-        upper_letter_max = ord('Z')
-        lower_letter_min = ord('a')
-        lower_letter_max = ord('z')
-        
-        ascii_s = ord(s)
-
-        # numbers
-        if ascii_s >= num_min and ascii_s <= num_max:
-            return True
-        # uppercase letters
-        if ascii_s >= upper_letter_min and ascii_s <= upper_letter_max:
-            return True
-        # lowercase letters
-        if ascii_s >= lower_letter_min and ascii_s <= lower_letter_max:
-            return True
-        
-        return False
+        return True # all characters were exhausted
 
 
 
 
-        
+
+
+
+
+
+
+
+
+
+
+
+
