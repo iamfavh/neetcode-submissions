@@ -1,50 +1,49 @@
+# Translate
+"""
+We are given an array of heights and need to find the largest 
+area between those heights.
+"""
+# Requirements
+"""
+Output the max area in integer.
+The largest input could be 100,000 heights so we need something
+better than O(n^2).
+"""
+# Approach
+"""
+To compute the areas: 
+    we use two pointers to keep calculating the area between the left
+    and right extremes of the list until a pointer crosses the other.
+    That puts us at O(n) because we need to explore the whole list.
+To keep track of the best area:
+    We'll use a greedy approach where we move the pointers based on
+    whether the area gets larger or not.
+    The area will get larger as the minimum height between the two pointers increases.
+"""
 class Solution:
     def maxArea(self, heights: List[int]) -> int:
+        largestArea = 0
+
+        l = 0
+        r = len(heights) - 1
         
-        """ Translate
-        The problem asks us to figure out the maximum amount of water that can be stored
-        in between 2 or more bars.
-        
-        """
-
-        """ Requirements
-        We are given a list of integers with the heights of all of these bars.
-        To solve the question, we must output the max area.
-        We can assume that there will be at least 2 bars and the height of each bar is >= 0.
-        """
-
-        """ Approach
-        Using 2 pointers, we can find the area between two bars.
-        The area between two bars is the width x min(height1, height2)
-        The maximum area is updated every time we find a value > than the last.
-        """
-
-        """ Code / Pseudocode
-        maxArea = 0
-        1 pointer at the start and another at the end
-        calculate area =  (left-right) * min(height1,height2)
-        if area > maxArea, update maxArea to area
-        move the smallest pointer (left or right), if they're equal, move the right
-        stop when left == right
-        return maxArea
-        """
-
-        left = 0
-        right = len(heights)-1
-        maxArea = 0
-
-        while left != right:
-            area = (right-left) * min(heights[left], heights[right])
-
-            if area > maxArea:
-                maxArea = area
+        while l < r:
             
-            if heights[left] <= heights[right]:
-                left += 1
-            else:
-                right -= 1
+            area = self.computeArea(r-l, min(heights[l],heights[r]))
 
-        return maxArea
+            largestArea = max(largestArea, area)
+            
+            if heights[l] < heights[r]:
+                l += 1
+            else:
+                r -= 1
+
+        return largestArea
+
+    def computeArea(self, width, height):
+        return width * height
+
+
 
 
 
