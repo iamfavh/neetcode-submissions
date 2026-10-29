@@ -1,48 +1,49 @@
-class Solution:
+# Translate
+"""
+We are given an array of heights which represent elevation on map.
+We must analyze the heights and find all the water that can be trapped
+in the map.
+"""
+# Requirements
+"""
+Output the value as an integer.
+There's at most 20,000 heights so we can afford O(n^2) or better.
+"""
+# Approach
+"""
+We'll use two pointers to track the water through the list of heights.
+We'll need to find out how much water is at the following moments:
+    held in a single space, with lesser elevations but a common min_elevation
+    held between a large space, with varying elevations at the bottom but a min_elevation
+    or when there is no water at all
+"""
+# Pseudocode
+"""    
+        
 
+"""
+
+
+class Solution:
     def trap(self, height: List[int]) -> int:
         
-        if len(height) < 3:
-            return 0
-        
-        # prefix_max, the largest height to the left of i
-        prefix_max = [0] * len(height)
-        largest = height[0]
-        for i in range(1, len(height)):
-            
-            prefix_max[i] = largest 
-            if largest < height[i]:
-                largest = height[i]
+       
+        left, right = 0, len(height) - 1
+        left_max = right_max = 0
+        res = 0
 
-        # suffix_max, the largest height to the right of i
-        suffix_max = [0] * len(height)
-        largest = height[len(height)-1]
-        for i in range(len(height)-1, -1, -1):
-            
-            suffix_max[i] = largest 
-            if largest < height[i]:
-                largest = height[i]
-
-        area = 0
-        for i in range(len(height)):
-            
-            bucket = min(prefix_max[i], suffix_max[i]) - height[i]
-
-            if bucket < 0:
-                area += 0
+        while left < right:
+            if height[left] < height[right]:
+                # right side guarantees a taller wall, so left_max bounds the water
+                if height[left] >= left_max:
+                    left_max = height[left]      # new wall, no water here
+                else:
+                    res += left_max - height[left]
+                left += 1
             else:
-                area += bucket
-            
-        return area
-            
-            
-
-
-
-
-
-
-
-
-
-        
+                if height[right] >= right_max:
+                    right_max = height[right]
+                else:
+                    res += right_max - height[right]
+                right -= 1
+        return res
